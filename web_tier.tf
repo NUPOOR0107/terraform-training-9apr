@@ -61,3 +61,25 @@ resource "aws_lb_target_group_attachment" "app_server_attachment_2" {
   target_id        = local.alb_targets[1]
   port             = 80
 }
+
+# Weighted Forward action
+
+resource "aws_lb_listener_rule" "host_based_routing" {
+  listener_arn = aws_lb_listener.front_end.arn
+  priority     = 100
+
+  action {
+    type = "forward"
+    forward {
+      target_group {
+        arn    = aws_lb_target_group.target_group_1.arn
+        weight = 60
+      }
+
+      target_group {
+        arn    = aws_lb_target_group.target_group_2.arn
+        weight = 40
+      }
+    }
+}
+}
