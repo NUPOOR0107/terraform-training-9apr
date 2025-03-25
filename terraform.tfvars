@@ -20,8 +20,8 @@ create_ec2_instance = {
 
   }
 }
-  
-  # DB tier
-  db_identifier = "banking-db-tht"
-  db_instance_class = "db.m6g.large"
-  database_name  = "bankingdb"
+
+# DB tier
+db_identifier     = "banking-db-tht"
+db_instance_class = "db.m6g.large"
+database_name     = "bankingdb"

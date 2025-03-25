@@ -2,13 +2,13 @@ resource "aws_lb" "web_tier_lb" {
   name               = "${local.alb_name}-tht"
   internal           = false
   load_balancer_type = "application"
-  security_groups   = [aws_security_group.web_alb_sg.id]
-  subnets           = local.alb_subnets
+  security_groups    = [aws_security_group.web_alb_sg.id]
+  subnets            = local.alb_subnets
 
-  enable_deletion_protection = false
+  enable_deletion_protection       = false
   enable_cross_zone_load_balancing = true
   tags = {
-    Name = "${local.alb_name}-tht"
+    Name       = "${local.alb_name}-tht"
     Created_by = "terraform"
   }
 }
@@ -19,10 +19,10 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "fixed-response"
+    type = "fixed-response"
     fixed_response {
       content_type = "text/plain"
-      status_code =  "200"
+      status_code  = "200"
       message_body = "Welcome to the ALB!"
     }
   }
@@ -34,7 +34,7 @@ resource "aws_lb_target_group" "target_group_1" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
   tags = {
-    Name = "${local.alb_name}-tg1-tht"
+    Name       = "${local.alb_name}-tg1-tht"
     Created_by = "terraform"
   }
 }
@@ -45,41 +45,19 @@ resource "aws_lb_target_group" "target_group_2" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
   tags = {
-    Name =  "${local.alb_name}-tg2-tht"
+    Name       = "${local.alb_name}-tg2-tht"
     Created_by = "terraform"
   }
 }
 
-resource "aws_lb_target_group_attachment" "app_server_attachment_1" {  
+resource "aws_lb_target_group_attachment" "app_server_attachment_1" {
   target_group_arn = aws_lb_target_group.target_group_1.arn
   target_id        = local.alb_targets[0]
   port             = 80
 }
 
-resource "aws_lb_target_group_attachment" "app_server_attachment_2" {  
+resource "aws_lb_target_group_attachment" "app_server_attachment_2" {
   target_group_arn = aws_lb_target_group.target_group_2.arn
   target_id        = local.alb_targets[1]
   port             = 80
-}
-
-# Weighted Forward action
-
-resource "aws_lb_listener_rule" "host_based_routing" {
-  listener_arn = aws_lb_listener.front_end.arn
-  priority     = 100
-
-  action {
-    type = "forward"
-    forward {
-      target_group {
-        arn    = aws_lb_target_group.target_group_1.arn
-        weight = 60
-      }
-
-      target_group {
-        arn    = aws_lb_target_group.target_group_2.arn
-        weight = 40
-      }
-    }
-}
 }

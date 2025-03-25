@@ -1,13 +1,4 @@
-variable "instance_type" {
-  type        = string
-  description = "This is a variable for Instance type"
-}
-
-variable "image_id" {
-  type        = string
-  description = "This is a variable for AMI ID"
-}
-
+#EC2
 variable "create_ec2_instance" {
   type = any
 }
@@ -31,8 +22,5 @@ variable "database_name" {
 variable "deletion_protection" {
   type        = bool
   description = "This is a variable for DB deletion protection"
-  default = true
+  default     = true
 }
-
-
-
