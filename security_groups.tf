@@ -62,8 +62,8 @@ resource "aws_security_group" "application_instance_sg" {
 
 
   ingress {
-    from_port       = 80
-    to_port         = 80
+    from_port       = 5000 #for a Flask app
+    to_port         = 5000
     protocol        = "tcp"
     security_groups = [aws_security_group.web_alb_sg.id]
   }
